@@ -1,33 +1,38 @@
 import argparse
 import requests
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 
 def main():
     parser = argparse.ArgumentParser(description='Download an image from a Pinterest URL.')
     parser.add_argument('url', metavar='URL', type=str, help='The Pinterest URL of the image to download')
     args = parser.parse_args()
 
-    # WebDriver
-    driver = webdriver.Chrome()
-    driver.get(args.url)  # cli url
-
-    # img url
-    selector = driver.find_element(By.ID, 'pin-image-preload')
-    img_url = selector.get_attribute('href')
-    print(img_url)
-
-    # img name
-    url = img_url
+    url = args.url
+    print(url)
     parts = url.split("/")
-    name = parts[-1]
+    print(parts)
+    name = parts[-2]
+    namejpg = name + '.jpg'
     print(name)
+    response = requests.get('https://www.pinterest.com/oembed.json?url=https://www.pinterest.com/pin/'+name+'/&amp;ref=oembed-discovery')
+    data = response.json()
+    thumbnail_url = data.get('thumbnail_url')
+    print("Thumbnail URL:", thumbnail_url)
 
-    # img download
-    response = requests.get(img_url)
+    parts2 = thumbnail_url.split("/")
+    print(parts2)
+    u1 = parts2[-1]
+    u2 = parts2[-2]
+    u3 = parts2[-3]
+    u4 = parts2[-4]
+
+    Hq_Image_URL = (f'https://i.pinimg.com/originals/{u4}/{u3}/{u2}/{u1}')
+    print(Hq_Image_URL)
+
+ # img download
+    response = requests.get(Hq_Image_URL)
 
     if response.status_code == 200:  
-            filename = name
+            filename = namejpg
             with open(filename, 'wb') as file:
                 file.write(response.content)
                 print(f"Image downloaded as {filename}")
