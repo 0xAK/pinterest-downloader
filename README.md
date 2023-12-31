@@ -3,7 +3,7 @@ Download Pinterest images without logging in
 Usage:
 
 1 - Clone this repository or download the script. 
-(Make sure to have python3, selenium & requests are installed)
+(Make sure to have python3, argparse & requests are installed)
 
 2 - Open your terminal or command prompt.
 
